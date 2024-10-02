@@ -33,14 +33,10 @@ spec:
         - name: busybox
           image: busybox:latest
           args: ["sh", "-c", "if [ -d /var/lib/mysql/last+found ]; then rm -rf /var/lib/mysql/last+found; fi"]
-
           volumeMounts:
             - name: vpro-db-data
               mountPath: /var/lib/mysql
-      nodeSelector:
-        zone: us-east-1c
-      volumes:
-        - name: vpro-db-data
-          awsElasticBlockStore:
-            volumeID: vol-0ede5d5be69d896e5
-            fsType: ext4
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
